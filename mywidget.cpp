@@ -4,6 +4,7 @@
 #include<QFile>
 #include<QDebug>
 #include<QTextStream>
+#include<QFileDialog>
 
 QString mFilename = "C:/Users/user/Desktop/1117/file.txt";
 
@@ -71,6 +72,17 @@ void myWidget::on_pushButton_2_clicked()
 
 void myWidget::on_pushButton_clicked()
 {
+    // Show save file dialog
+    QString filename = QFileDialog::getSaveFileName(this,
+        QStringLiteral("另存新檔"),
+        mFilename,
+        "Text Files (*.txt);;All Files (*)");
+    
+    // If user cancelled the dialog, return
+    if(filename.isEmpty()){
+        return;
+    }
+
     QString saveFile="";
 
     for(int i=0;i<ui->tableWidget->rowCount();i++){
@@ -80,7 +92,7 @@ void myWidget::on_pushButton_clicked()
         }
         saveFile+="\n";
     }
-    Write(mFilename,saveFile);
+    Write(filename,saveFile);
 }
 
 void myWidget::on_pushButton_4_clicked()
