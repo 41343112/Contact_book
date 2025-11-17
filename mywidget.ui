@@ -55,6 +55,7 @@ QLineEdit {
 
 QLineEdit:focus {
     border: 2px solid #2196F3;
+    background-color: #f0f8ff;
 }
 
 QLabel {
@@ -76,10 +77,12 @@ QPushButton {
 
 QPushButton:hover {
     background-color: #1976D2;
+    padding: 11px 21px;
 }
 
 QPushButton:pressed {
     background-color: #0D47A1;
+    padding: 9px 19px;
 }
 
 QPushButton#pushButton_2 {
@@ -88,10 +91,12 @@ QPushButton#pushButton_2 {
 
 QPushButton#pushButton_2:hover {
     background-color: #45a049;
+    padding: 11px 21px;
 }
 
 QPushButton#pushButton_2:pressed {
     background-color: #357a38;
+    padding: 9px 19px;
 }
 
 QPushButton#pushButton_4 {
@@ -100,10 +105,12 @@ QPushButton#pushButton_4 {
 
 QPushButton#pushButton_4:hover {
     background-color: #da190b;
+    padding: 11px 21px;
 }
 
 QPushButton#pushButton_4:pressed {
     background-color: #a31008;
+    padding: 9px 19px;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">

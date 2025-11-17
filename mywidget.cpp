@@ -5,6 +5,11 @@
 #include<QDebug>
 #include<QTextStream>
 #include<QFileDialog>
+#include<QPropertyAnimation>
+#include<QGraphicsOpacityEffect>
+#include<QParallelAnimationGroup>
+#include<QEasingCurve>
+#include<QTimer>
 
 QString mFilename = "C:/Users/user/Desktop/1117/file.txt";
 
@@ -56,6 +61,11 @@ myWidget::myWidget(QWidget *parent)
     
     // Enable stretch for the last column
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+    
+    // Set up opacity effect for fade-in animation
+    QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect(this);
+    this->setGraphicsEffect(opacityEffect);
+    opacityEffect->setOpacity(0.0);
 }
 
 myWidget::~myWidget()
@@ -72,13 +82,18 @@ void myWidget::on_pushButton_2_clicked()
     inputRow4 = new QTableWidgetItem(QString(ui->lineEdit_4->text()));
 
     ui->tableWidget->insertRow(ui->tableWidget->rowCount());
-
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0,inputRow1);
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1,inputRow2);
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2,inputRow3);
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,3,inputRow4);
     
-    // Clear input fields after adding
+    int newRow = ui->tableWidget->rowCount()-1;
+
+    ui->tableWidget->setItem(newRow,0,inputRow1);
+    ui->tableWidget->setItem(newRow,1,inputRow2);
+    ui->tableWidget->setItem(newRow,2,inputRow3);
+    ui->tableWidget->setItem(newRow,3,inputRow4);
+    
+    // Animate the newly added row
+    animateRowInsertion(newRow);
+    
+    // Clear input fields after adding with smooth animation
     ui->lineEdit->clear();
     ui->lineEdit_2->clear();
     ui->lineEdit_3->clear();
@@ -200,7 +215,60 @@ void myWidget::on_pushButton_3_clicked()
                 QTableWidgetItem *item = new QTableWidgetItem(fields[i]);
                 ui->tableWidget->setItem(row, i, item);
             }
+            
+            // Animate the newly added row
+            animateRowInsertion(row);
         }
     }
+}
+
+void myWidget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    
+    // Trigger fade-in animation when window is first shown
+    static bool firstShow = true;
+    if(firstShow) {
+        firstShow = false;
+        animateWindowFadeIn();
+    }
+}
+
+void myWidget::animateWindowFadeIn()
+{
+    // Animate the window fade-in effect
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+    if(effect) {
+        QPropertyAnimation *fadeIn = new QPropertyAnimation(effect, "opacity");
+        fadeIn->setDuration(800);
+        fadeIn->setStartValue(0.0);
+        fadeIn->setEndValue(1.0);
+        fadeIn->setEasingCurve(QEasingCurve::OutCubic);
+        fadeIn->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+}
+
+void myWidget::animateRowInsertion(int row)
+{
+    // Create a smooth animation effect for the newly inserted row
+    // We'll animate the background color briefly to draw attention
+    QTimer::singleShot(50, [this, row]() {
+        for(int col = 0; col < ui->tableWidget->columnCount(); col++) {
+            QTableWidgetItem *item = ui->tableWidget->item(row, col);
+            if(item) {
+                // Create a subtle highlight effect
+                QColor highlightColor(76, 175, 80, 100);  // Light green with transparency
+                item->setBackground(QBrush(highlightColor));
+                
+                // Fade out the highlight after a short delay
+                QTimer::singleShot(500, [this, row, col]() {
+                    QTableWidgetItem *item = ui->tableWidget->item(row, col);
+                    if(item) {
+                        item->setBackground(QBrush(Qt::white));
+                    }
+                });
+            }
+        }
+    });
 }
 
