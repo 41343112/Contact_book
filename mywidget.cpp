@@ -68,3 +68,11 @@ void myWidget::on_pushButton_clicked()
     Write(mFilename,saveFile);
 }
 
+void myWidget::on_pushButton_3_clicked()
+{
+    // Save data first
+    on_pushButton_clicked();
+    // Then close the application
+    close();
+}
+
