@@ -85,6 +85,10 @@ void myWidget::on_pushButton_clicked()
 
 void myWidget::on_pushButton_3_clicked()
 {
+    // Save data first
+    on_pushButton_clicked();
+    // Then close the application
+    close();
     QString text = Read(mFilename);
     if(text.isEmpty()){
         qDebug()<<"No data to import or file is empty";
