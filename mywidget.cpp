@@ -5,6 +5,8 @@
 #include<QDebug>
 #include<QTextStream>
 #include<QFileDialog>
+#include<QSet>
+#include<algorithm>
 
 QString mFilename = "C:/Users/user/Desktop/1117/file.txt";
 
@@ -47,6 +49,18 @@ myWidget::myWidget(QWidget *parent)
     ui->tableWidget->setColumnCount(4);
     ColTotle<<QStringLiteral("學號")<<QStringLiteral("班級")<<QStringLiteral("姓名")<<QStringLiteral("電話");
     ui->tableWidget->setHorizontalHeaderLabels(ColTotle);
+    
+    // Set column widths for better appearance
+    ui->tableWidget->setColumnWidth(0, 120);
+    ui->tableWidget->setColumnWidth(1, 120);
+    ui->tableWidget->setColumnWidth(2, 150);
+    ui->tableWidget->setColumnWidth(3, 180);
+    
+    // Enable alternating row colors
+    ui->tableWidget->setAlternatingRowColors(true);
+    
+    // Set selection behavior to select entire rows
+    ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 myWidget::~myWidget()
@@ -56,10 +70,18 @@ myWidget::~myWidget()
 
 void myWidget::on_pushButton_2_clicked()
 {
+    // Validate input fields
+    if(ui->lineEdit->text().isEmpty() || ui->lineEdit_2->text().isEmpty() || 
+       ui->lineEdit_3->text().isEmpty() || ui->lineEdit_4->text().isEmpty()){
+        // Show a message if any field is empty
+        qDebug()<<"請填寫所有欄位";
+        return;
+    }
+    
     QTableWidgetItem *inputRow1,*inputRow2,*inputRow3,*inputRow4;
     inputRow1 = new QTableWidgetItem(QString(ui->lineEdit->text()));
-    inputRow2 = new QTableWidgetItem(QString(ui->lineEdit_2->text()));
-    inputRow3 = new QTableWidgetItem(QString(ui->lineEdit_3->text()));
+    inputRow2 = new QTableWidgetItem(QString(ui->lineEdit_3->text()));
+    inputRow3 = new QTableWidgetItem(QString(ui->lineEdit_2->text()));
     inputRow4 = new QTableWidgetItem(QString(ui->lineEdit_4->text()));
 
     ui->tableWidget->insertRow(ui->tableWidget->rowCount());
@@ -74,6 +96,9 @@ void myWidget::on_pushButton_2_clicked()
     ui->lineEdit_2->clear();
     ui->lineEdit_3->clear();
     ui->lineEdit_4->clear();
+    
+    // Set focus back to first input field
+    ui->lineEdit->setFocus();
 }
 
 
@@ -192,6 +217,31 @@ void myWidget::on_pushButton_3_clicked()
                 ui->tableWidget->setItem(row, i, item);
             }
         }
+    }
+}
+
+void myWidget::on_pushButton_5_clicked()
+{
+    // Get selected rows
+    QList<QTableWidgetItem*> selectedItems = ui->tableWidget->selectedItems();
+    
+    if(selectedItems.isEmpty()){
+        qDebug()<<"請先選擇要刪除的聯絡人";
+        return;
+    }
+    
+    // Get unique row indices
+    QSet<int> rowsToDelete;
+    for(QTableWidgetItem* item : selectedItems){
+        rowsToDelete.insert(item->row());
+    }
+    
+    // Delete rows in reverse order to avoid index shifts
+    QList<int> sortedRows = rowsToDelete.values();
+    std::sort(sortedRows.begin(), sortedRows.end(), std::greater<int>());
+    
+    for(int row : sortedRows){
+        ui->tableWidget->removeRow(row);
     }
 }
 

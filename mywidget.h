@@ -26,6 +26,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_pushButton_5_clicked();
+
 private:
     Ui::myWidget *ui;
     QString currentFilename;  // Track the currently loaded/imported filename
