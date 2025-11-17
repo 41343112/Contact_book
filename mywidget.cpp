@@ -3,6 +3,7 @@
 
 #include<QFile>
 #include<QDebug>
+#include<QTextStream>
 
 QString mFilename = "C:/Users/user/Desktop/1117/file.txt";
 
@@ -19,6 +20,20 @@ void Write(QString Filename, QString str){
     out<<str;
     mFile.flush();
     mFile.close();
+}
+
+QString Read(QString Filename){
+    QFile mFile(Filename);
+
+    if(!mFile.open(QFile::ReadOnly | QFile::Text)){
+        qDebug()<<"could not open file for read";
+        return "";
+    }
+
+    QTextStream in(&mFile);
+    QString text = in.readAll();
+    mFile.close();
+    return text;
 }
 myWidget::myWidget(QWidget *parent)
     : QWidget(parent)
@@ -66,5 +81,37 @@ void myWidget::on_pushButton_clicked()
         saveFile+="\n";
     }
     Write(mFilename,saveFile);
+}
+
+void myWidget::on_pushButton_3_clicked()
+{
+    QString text = Read(mFilename);
+    if(text.isEmpty()){
+        qDebug()<<"No data to import or file is empty";
+        return;
+    }
+
+    // Clear existing table data
+    ui->tableWidget->setRowCount(0);
+
+    // Split by lines
+    QStringList lines = text.split("\n", Qt::SkipEmptyParts);
+    
+    for(const QString &line : lines){
+        // Split by comma
+        QStringList fields = line.split(",");
+        
+        if(fields.size() == 4){
+            // Add a new row
+            int row = ui->tableWidget->rowCount();
+            ui->tableWidget->insertRow(row);
+            
+            // Set the data for each column
+            for(int i = 0; i < 4; i++){
+                QTableWidgetItem *item = new QTableWidgetItem(fields[i]);
+                ui->tableWidget->setItem(row, i, item);
+            }
+        }
+    }
 }
 

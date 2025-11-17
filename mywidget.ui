@@ -71,6 +71,13 @@
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
+          <string>匯出</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
           <string>匯入</string>
          </property>
         </widget>
