@@ -100,16 +100,16 @@ void myWidget::on_pushButton_3_clicked()
 
     // Split by lines
     QStringList lines = text.split("\n", Qt::SkipEmptyParts);
-    
+
     for(const QString &line : lines){
         // Split by comma
         QStringList fields = line.split(",");
-        
+
         if(fields.size() == 4){
             // Add a new row
             int row = ui->tableWidget->rowCount();
             ui->tableWidget->insertRow(row);
-            
+
             // Set the data for each column
             for(int i = 0; i < 4; i++){
                 QTableWidgetItem *item = new QTableWidgetItem(fields[i]);
@@ -117,5 +117,11 @@ void myWidget::on_pushButton_3_clicked()
             }
         }
     }
+}
+
+
+void myWidget::on_pushButton_4_clicked()
+{
+
 }
 
