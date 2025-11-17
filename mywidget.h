@@ -28,5 +28,6 @@ private slots:
 
 private:
     Ui::myWidget *ui;
+    QString currentFilename;  // Track the currently loaded/imported filename
 };
 #endif // MYWIDGET_H
