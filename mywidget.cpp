@@ -47,6 +47,15 @@ myWidget::myWidget(QWidget *parent)
     ui->tableWidget->setColumnCount(4);
     ColTotle<<QStringLiteral("學號")<<QStringLiteral("班級")<<QStringLiteral("姓名")<<QStringLiteral("電話");
     ui->tableWidget->setHorizontalHeaderLabels(ColTotle);
+    
+    // Set column widths for better appearance
+    ui->tableWidget->setColumnWidth(0, 150);  // 學號
+    ui->tableWidget->setColumnWidth(1, 150);  // 班級
+    ui->tableWidget->setColumnWidth(2, 200);  // 姓名
+    ui->tableWidget->setColumnWidth(3, 250);  // 電話
+    
+    // Enable stretch for the last column
+    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
 myWidget::~myWidget()
