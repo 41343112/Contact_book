@@ -134,7 +134,18 @@ void myWidget::on_pushButton_4_clicked()
 
 void myWidget::on_pushButton_3_clicked()
 {
-    QString text = Read(mFilename);
+    // Show open file dialog
+    QString filename = QFileDialog::getOpenFileName(this,
+        QStringLiteral("選擇匯入的檔案"),
+        mFilename,
+        "Text Files (*.txt);;All Files (*)");
+    
+    // If user cancelled the dialog, return
+    if(filename.isEmpty()){
+        return;
+    }
+
+    QString text = Read(filename);
     if(text.isEmpty()){
         qDebug()<<"No data to import or file is empty";
         return;
